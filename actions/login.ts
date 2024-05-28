@@ -12,6 +12,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
   if (!validatedFileds.success) {
     return {
       error: "Invalid fields !",
+      success: null,
     };
   }
 
@@ -29,10 +30,12 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
         case "CredentialsSignin":
           return {
             error: "Invalid credential",
+            success: null,
           };
         default:
           return {
             error: "Something went wrong",
+            success: null,
           };
       }
     }
