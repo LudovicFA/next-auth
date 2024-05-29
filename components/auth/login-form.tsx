@@ -40,20 +40,19 @@ export const LoginForm = () => {
         startTransition(() => {
             login(values)
             .then((data) => {
-                setError(data?.error)
-                // TODO: When 2FA will done
-            //   if (data?.error) {
-            //     form.reset();
-            //     setError(data.error);
-            //   }
+               
+              if (data?.error) {
+                form.reset();
+                setError(data.error);
+              }
     
-            //   if (data?.success) {
-            //     form.reset();
-            //     setSuccess(data.success);
-            //   }
+              if (data?.success) {
+                form.reset();
+                setSuccess(data.success);
+              }
     
             })
-            // .catch(() => setError("Something went wrong"));
+            .catch(() => setError("Something went wrong"));
         })
     }
 
