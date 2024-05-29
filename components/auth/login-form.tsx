@@ -12,6 +12,7 @@ import { FormError } from "../form-error"
 import { FormSuccess } from "../form-success"
 import { login } from "@/actions/login"
 import { useState, useTransition } from "react"
+import { useSearchParams } from "next/navigation"
 
 export const LoginForm = () => {
 
@@ -19,6 +20,9 @@ export const LoginForm = () => {
 
     const [error, setError] = useState<string | undefined>("")
     const [success, setSuccess] = useState<string | undefined>("")
+
+    const searchParams = useSearchParams();
+    const urlError = searchParams.get("error") === "OAuthAccountNotLinked" ? "Email already in use with different provider." : ""
 
     const form = useForm<z.infer<typeof LoginSchema>>({
         resolver: zodResolver(LoginSchema),
@@ -36,18 +40,20 @@ export const LoginForm = () => {
         startTransition(() => {
             login(values)
             .then((data) => {
-              if (data?.error) {
-                form.reset();
-                setError(data.error);
-              }
+                setError(data?.error)
+                // TODO: When 2FA will done
+            //   if (data?.error) {
+            //     form.reset();
+            //     setError(data.error);
+            //   }
     
-              if (data?.success) {
-                form.reset();
-                setSuccess(data.success);
-              }
+            //   if (data?.success) {
+            //     form.reset();
+            //     setSuccess(data.success);
+            //   }
     
             })
-            .catch(() => setError("Something went wrong"));
+            // .catch(() => setError("Something went wrong"));
         })
     }
 
@@ -101,7 +107,7 @@ export const LoginForm = () => {
                             )}
                         />
                     </div>
-                    <FormError message={error}/>
+                    <FormError message={error || urlError}/>
                     <FormSuccess message={success}/>
                     <Button
                         type="submit"
